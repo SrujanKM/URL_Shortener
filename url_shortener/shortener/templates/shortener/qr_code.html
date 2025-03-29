@@ -1,0 +1,31 @@
+<!-- shortener/templates/shortener/qr_code.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code</title>
+    <script>
+        function copyQRCode() {
+            const img = document.getElementById('qr-code-img');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob((blob) => {
+                const item = new ClipboardItem({ 'image/png': blob });
+                navigator.clipboard.write([item]).then(() => {
+                    alert('QR Code copied to clipboard!');
+                });
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>QR Code for Shortened URL</h1>
+    <img id="qr-code-img" src="data:image/png;base64,{{ qr_code_img }}" alt="QR Code">
+    <br>
+    <button onclick="copyQRCode()">Copy QR Code</button>
+    <a href="{% url 'download_qr_code' short_code %}" download>Download QR Code</a>
+</body>
+</html>

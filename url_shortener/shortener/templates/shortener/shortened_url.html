@@ -1,0 +1,136 @@
+<!-- shortener/templates/shortener/shortened_url.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shortenr - Shortened URL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Background Animation */
+        body {
+            background: radial-gradient(circle at top, #1e293b, #0f172a);
+            overflow: hidden;
+            color: white;
+            position: relative;
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: floatAnimation 6s infinite alternate ease-in-out;
+        }
+        @keyframes floatAnimation {
+            0% { transform: translateY(0px); opacity: 0.5; }
+            100% { transform: translateY(-30px); opacity: 1; }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px;
+            box-shadow: 0px 15px 50px rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .glass-card:hover {
+            transform: scale(1.05);
+        }
+
+        /* Animated Neon Button */
+        .neon-btn {
+            display: inline-block;
+            padding: 14px 28px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+        .neon-btn::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+            transform: scale(0);
+            transition: transform 0.5s ease-in-out;
+        }
+        .neon-btn:hover::before {
+            transform: scale(1);
+        }
+        .neon-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
+        }
+
+        /* Waves Animation */
+        .wave {
+            position: absolute;
+            width: 100%;
+            height: 150px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), transparent);
+            opacity: 0.3;
+            animation: waveAnimation 10s infinite alternate ease-in-out;
+        }
+        @keyframes waveAnimation {
+            0% { transform: translateX(-50px); }
+            100% { transform: translateX(50px); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen px-6 relative">
+
+    <!-- Floating Particles -->
+    <div class="particle" style="top: 10%; left: 15%; animation-duration: 4s;"></div>
+    <div class="particle" style="top: 40%; left: 70%; animation-duration: 6s;"></div>
+    <div class="particle" style="top: 70%; left: 25%; animation-duration: 5s;"></div>
+    <div class="particle" style="top: 90%; left: 85%; animation-duration: 7s;"></div>
+
+    <!-- Main Content -->
+    <div class="glass-card text-center max-w-lg">
+        <h1 class="text-5xl font-extrabold mb-6 text-indigo-400">Shortened URL</h1>
+        <p class="text-3xl font-bold mb-6">Your shortened URL is:</p>
+        <a href="{% url 'redirect_url' short_code %}" class="text-blue-400 text-2xl underline">http://127.0.0.1:8000/{{ short_code }}/</a>
+        <br>
+        <img id="qr-code-img" src="data:image/png;base64,{{ qr_code_img }}" alt="QR Code" class="mx-auto">
+        <br>
+        <button onclick="copyQRCode()" class="neon-btn bg-purple-600 text-white mt-4">Copy QR Code</button>
+        <a href="data:image/png;base64,{{ qr_code_img }}" download="qr_code_{{ short_code }}.png" class="neon-btn bg-purple-600 text-white mt-4">Download QR Code</a>
+    </div>
+
+    <!-- Animated Waves -->
+    <div class="wave"></div>
+
+    <script>
+        function copyQRCode() {
+            const img = document.getElementById('qr-code-img');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob((blob) => {
+                const item = new ClipboardItem({ 'image/png': blob });
+                navigator.clipboard.write([item]).then(() => {
+                    alert('QR Code copied to clipboard!');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

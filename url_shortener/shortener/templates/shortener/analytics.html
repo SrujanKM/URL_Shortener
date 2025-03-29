@@ -1,0 +1,18 @@
+<!-- shortener/templates/shortener/analytics.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Analytics</title>
+</head>
+<body>
+    <h1>Analytics for {{ url.short_code }}</h1>
+    <p>Original URL: {{ url.original_url }}</p>
+    <h2>Click Events</h2>
+    <ul>
+        {% for click in clicks %}
+            <li>{{ click.timestamp }} - IP: {{ click.ip_address }} - Device: {{ click.user_agent }} - Referrer: {{ click.referrer }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
